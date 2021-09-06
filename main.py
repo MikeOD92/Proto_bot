@@ -6,7 +6,8 @@ import json
 import random
 
 client = discord.Client()
-sad_words = ['bummer', 'sad', 'depressed', 'unhappy', 'gosh darn it']
+
+sad_words = ['bummer', 'sad', 'depressed', 'unhappy']
 
 starter_encouragements = [
   "cheer up kiddo", "hang in there", "you are a great person/bot", "wow way to go"
@@ -22,17 +23,20 @@ def get_quote():
 
 def update_encouragements(encouraging_message):
   if "encouragements" in db.keys():
-    # encouraging_message.extends(db["encouragements"])
-    encouragements = db.encouragements.append(encouraging_message)
-    db['encouragements'] = encouragements
+    db['encouragements'].append(encouraging_message)
   else:
     db["encouragements"] = [encouraging_message]
 
 def delete_encouragement(index):
-  encouragements = db['encouragments']
+  encouragements = db['encouragements']
   if len(encouragements) > index:
     del encouragements[index]
     db["encouragements"] = encouragements
+
+if "encouragements" in db.keys():
+    options = starter_encouragements
+    options.extend(db["encouragements"])
+#moving this up here lets us avoid added the entire db object to it's self when we add a new one but now the new string does not append correctly 
 
 @client.event
 async def on_ready():
@@ -49,15 +53,11 @@ async def on_message(message):
     quote = get_quote()
     await message.channel.send(quote)
 
-  options = starter_encouragements
-
-  if "encouragements" in db.keys():
-    # options = options + db["encouragements"]
-    options.extend(db["encouragements"])
-
-  
   if any(word in msg for word in sad_words):
-    await message.channel.send(random.choice(options))
+    await message.channel.send(random.choice(db["encouragements"]))
+    #changed this from options to encouragements seems to work had wrong print in next line so double checking now
+
+    # await message.channel.send(db['encouragements'])
 
   if msg.startswith('$new'):
     encouraging_message = msg.split('$new ',1)[1]
