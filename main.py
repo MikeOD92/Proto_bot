@@ -71,6 +71,23 @@ async def on_message(message):
       delete_encouragement(index)
       encouragements = db["encouragements"]
       await message.channel.send(encouragements)
+# dice roll functionality for RPG-roll bot (next project)
+  if msg.startswith('$roll'):
+    roll = msg.split('$roll', 1)[1]
+
+    num = int(roll.split('d')[0])
+    sides = int(roll.split('d')[1])
+
+    await message.channel.send(str(message.author) + " rolled " +str(roll))
+
+    while num > 0:
+      await message.channel.send(random.randint(1,sides))
+      num -= 1
+
+    
+
+
+
 
 
 
