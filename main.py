@@ -13,6 +13,22 @@ starter_encouragements = [
   "cheer up kiddo", "hang in there", "you are a great person/bot", "wow way to go"
 ]
 
+char_sheet = [
+  {
+  "attr": "strength",
+  "value": 0
+  },
+  {
+    "attr": "agility",
+    "value": 0
+  },
+  {
+    "attr": "wisdom",
+    "value": 0
+  },
+
+]
+
 def get_quote():
   response = requests.get('https://zenquotes.io/api/random')
 
@@ -72,8 +88,8 @@ async def on_message(message):
       encouragements = db["encouragements"]
       await message.channel.send(encouragements)
 # dice roll functionality for RPG-roll bot (next project)
-  if msg.startswith('$roll'):
-    roll = msg.split('$roll', 1)[1]
+  if msg.startswith('/roll'):
+    roll = msg.split('/roll', 1)[1]
 
     if(roll.split('d')[0] == " " or roll.split('d')[0] == "" ):
       num = 1
@@ -83,14 +99,31 @@ async def on_message(message):
     sides = int(roll.split('d')[1])
 
     await message.channel.send(str(message.author) + " rolled " +str(roll))
+    
+    total = 0
 
     while num > 0:
-      await message.channel.send(random.randint(1,sides))
+      rolled_num = random.randint(1,sides)
+      total = rolled_num + total
+      await message.channel.send(rolled_num)
       num -= 1
+    await message.channel.send('total val is ' + str(total))  
+    return total
 
   if msg.startswith('$hey'):
     #added emoji with :slight_smile: or :flag_us: etc...
     await message.channel.send("Hi :slight_smile:")
+
+    await message.channel.send(db["encouragements"])
+
+  if msg.startswith('/createchar'):
+    db[message.author] = char_sheet
+
+    for item in char_sheet:
+      await message.channel.send(f'roll for your {item["attr"]}')
+      # await client.wait_for("message", check=lambda: message.author == 'ctx'.author )
+      
+
     
 
     
