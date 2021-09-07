@@ -75,7 +75,11 @@ async def on_message(message):
   if msg.startswith('$roll'):
     roll = msg.split('$roll', 1)[1]
 
-    num = int(roll.split('d')[0])
+    if(roll.split('d')[0] == " " or roll.split('d')[0] == "" ):
+      num = 1
+    else:
+      num = int(roll.split('d')[0])
+
     sides = int(roll.split('d')[1])
 
     await message.channel.send(str(message.author) + " rolled " +str(roll))
@@ -84,6 +88,12 @@ async def on_message(message):
       await message.channel.send(random.randint(1,sides))
       num -= 1
 
+  if msg.startswith('$hey'):
+    #added emoji with :slight_smile: or :flag_us: etc...
+    await message.channel.send("Hi :slight_smile:")
+    
+
+    
     
 
 
