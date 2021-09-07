@@ -13,7 +13,7 @@ starter_encouragements = [
   "cheer up kiddo", "hang in there", "you are a great person/bot", "wow way to go"
 ]
 
-char_sheet = [
+char_sheet_schema = [
   {
   "attr": "strength",
   "value": 0
@@ -117,9 +117,11 @@ async def on_message(message):
     await message.channel.send(db["encouragements"])
 
   if msg.startswith('/createchar'):
-    db[message.author] = char_sheet
+    db[message.author] = char_sheet_schema
+#probably want to make this a class and then can have new char_charts based on Schema class.
 
-    for item in char_sheet:
+# still can't figure out how to let the user start this command and then roll while in the middle of this command to fill out character sheet. need to rework all this functionallity  
+    for item in char_sheet_schema:
       await message.channel.send(f'roll for your {item["attr"]}')
       # await client.wait_for("message", check=lambda: message.author == 'ctx'.author )
       
